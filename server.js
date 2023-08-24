@@ -1,17 +1,15 @@
 const mysql = require("mysql2");
 const inquirer = require("inquirer");
 const { viewAllEmployees, viewAllDepartments, viewAllRoles } = require("./lib/queries");
-const db = require("./config/connection")
-const cTable = require("console.table")
-
+const { addEmployee } = require("./lib/prompt");
+const db = require("./config/connection");
+const cTable = require("console.table");
 
 db.connect((err) => {
   if (err) throw err;
   console.log("database connected")
   promptUser()
 });
-
-
 
 const promptUser = () => {
   inquirer.prompt([
@@ -45,9 +43,9 @@ const promptUser = () => {
         case "Add Employee":
           addEmployee()
           .then(() => {
-            promptUser()
+            promptUser();
           }).catch(err => {
-            console.error("Error trying to add an employee.", err);
+            console.error("Error in adding an employee.", err)
           });
           break;
         case "Update Employee Role":
