@@ -1,21 +1,17 @@
-const express = require("express");
 const mysql = require("mysql2");
-const inquirer = require("inquirer")
-const PORT = process.env.PORT || 3001;
-const app = express();
-const { viewAllEmployees } = require("./lib/queries")
-app.use(express.urlencoded({ extended: false }));
-app.use(express.json());
+const inquirer = require("inquirer");
+const { viewAllEmployees } = require("./lib/queries");
+const db = require("./config/connection")
+const cTable = require("console.table")
 
-const db = mysql.createConnection(
-  {
-    host: '127.0.0.1',
-    user: 'root',
-    password: 'RunSqlPl5$',
-    database: 'employees_db'
-  },
-  console.log(`Connected to the employees_db database.`)
-);
+
+db.connect((err) => {
+  if (err) throw err;
+  console.log("database connected")
+  promptUser()
+});
+
+
 
 const promptUser = () => {
   inquirer.prompt([
@@ -31,15 +27,30 @@ const promptUser = () => {
           "Add Role",
           "View All Departments",
           "Add Department",
-          "Exit"
-          ]
-      }
+          "Exit",
+          ],
+      },
     ])
     .then((answers) => {
       switch(answers.choices) {
-        case "View All Empoyees":
+        case "View All Employees":
           viewAllEmployees()
+          .then(() => {
+              promptUser();
+          })
+          .catch(err => {
+              console.error("Error while viewing employees:", err);
+          });
           break;
+        case "Add Employee":
+          addEmployee()
+          .then(() => {
+            promptUser()
+          }).catch(err => {
+            console.error("Error trying to add an employee.", err);
+          });
+        default:
+        return console.log("default")
       }
-});
-};
+    })
+}
