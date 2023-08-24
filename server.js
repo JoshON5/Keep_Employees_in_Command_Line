@@ -1,6 +1,6 @@
 const mysql = require("mysql2");
 const inquirer = require("inquirer");
-const { viewAllEmployees } = require("./lib/queries");
+const { viewAllEmployees, viewAllDepartments, viewAllRoles } = require("./lib/queries");
 const db = require("./config/connection")
 const cTable = require("console.table")
 
@@ -49,6 +49,49 @@ const promptUser = () => {
           }).catch(err => {
             console.error("Error trying to add an employee.", err);
           });
+          break;
+        case "Update Employee Role":
+          updateEmployeeRole()
+          .then(() => {
+            promptUser()
+          }).catch(err => {
+            console.error("Error in updating employee.", err)
+          });
+          break;
+        case "View All Roles":
+          viewAllRoles()
+          .then(() => {
+            promptUser()
+          }).catch(err => {
+            console.error("Error while viewing roles.", err);
+          });
+          break;
+        case "Add Role":
+          addRole()
+          .then(() => {
+            promptUser()
+          }).catch(err => {
+            console.error("Error while trying to add a new role.", err);
+          });
+          break;
+        case "View All Departments":
+          viewAllDepartments()
+          .then(() => {
+            promptUser()
+          }).catch(err => {
+            console.error("Error while viewing all departments.", err);
+          });
+        break;
+        case "Add Department":
+          addDepartment()
+          .then(() => {
+            promptUser()
+          }).catch(err => {
+            console.error("Error while trying to add a department.", err);
+          });
+          break;
+        case "Exit":
+          exit()
         default:
         return console.log("default")
       }
