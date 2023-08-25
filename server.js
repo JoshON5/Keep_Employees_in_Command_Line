@@ -1,7 +1,7 @@
 const mysql = require("mysql2");
 const inquirer = require("inquirer");
 const { viewAllEmployees, viewAllDepartments, viewAllRoles } = require("./lib/queries");
-const { addEmployee } = require("./lib/prompt");
+const { addEmployee, addDepartment, addRole } = require("./lib/prompt");
 const db = require("./config/connection");
 const cTable = require("console.table");
 
@@ -89,7 +89,8 @@ const promptUser = () => {
           });
           break;
         case "Exit":
-          exit()
+          db.end();
+        break;
         default:
         return console.log("default")
       }
